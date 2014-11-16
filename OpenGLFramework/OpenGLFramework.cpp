@@ -4,6 +4,9 @@ OpenGLFramework* OpenGLFramework::m_app = NULL;
 
 void OpenGLFramework::Run()
 {
+	if(InitOpenGLState() == false)
+		exit(EXIT_FAILURE);
+
 	SetupRC();
 	glutMainLoop();
 }
@@ -18,8 +21,7 @@ OpenGLFramework::OpenGLFramework(int argc, char* argv[], int w, int h, const cha
 
 	InitWindow(w,h,title);
 
-	if(InitOpenGLState() == false)
-		exit(EXIT_FAILURE);
+	
 }
 
 bool OpenGLFramework::InitOpenGLState()
