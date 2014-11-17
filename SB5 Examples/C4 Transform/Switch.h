@@ -1,0 +1,9 @@
+#define ModelViewProjection
+//#define Move
+//#define Objects
+//#define OrthoGraphic
+//#define Perspective
+//#define SphereWorld
+//#define SphereWorld2
+//#define SphereWorld3
+//#define SphereWorld4
