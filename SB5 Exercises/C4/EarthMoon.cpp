@@ -34,7 +34,48 @@ void EarthMoonApp::OnRenderScene()
     static GLfloat vMoonColor[] = { 0.66f, 0.66f, 0.66f, 1.0f };
 
 	static CStopWatch	rotTimer;
-	float yRot = rotTimer.GetElapsedSeconds() * 60.0f;
+	float rot_earth = rotTimer.GetElapsedSeconds() * 60.0f * 1.5f;
+	float rot_moon = rotTimer.GetElapsedSeconds() * 60.0f * 2.5f;
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	modelViewMatrix.PushMatrix();
+
+	M3DMatrix44f mCamera;
+	cameraFrame.GetCameraMatrix(mCamera);
+	modelViewMatrix.PushMatrix(mCamera);
+
+	// Transform the light position into eye coordinates
+    M3DVector4f vLightPos = { 0.0f, 10.0f, 5.0f, 1.0f };
+    M3DVector4f vLightEyePos;
+    m3dTransformVector4(vLightEyePos, vLightPos, mCamera);
+
+	modelViewMatrix.Translate(0.0f, 0.0f, -8.5f);
+
+	shaderManager.UseStockShader(GLT_SHADER_POINT_LIGHT_DIFF, transformPipeline.GetModelViewMatrix(), 
+		transformPipeline.GetProjectionMatrix(), vLightEyePos, vSunColor);
+	sunBatch.Draw();
+
+	modelViewMatrix.PushMatrix();
+		modelViewMatrix.Rotate(rot_earth, -0.12f,0.85f,0.0f);
+		modelViewMatrix.Translate(2.3f,0.0f,0.0f);
+		shaderManager.UseStockShader(GLT_SHADER_POINT_LIGHT_DIFF, transformPipeline.GetModelViewMatrix(), 
+			transformPipeline.GetProjectionMatrix(), vLightEyePos, vEarthColor);
+		earthBatch.Draw();
+
+		modelViewMatrix.PushMatrix();
+			modelViewMatrix.Rotate(rot_moon, 0.0f,1.0f,0.0f);
+			modelViewMatrix.Translate(0.5f,0.0f,0.0f);
+			shaderManager.UseStockShader(GLT_SHADER_POINT_LIGHT_DIFF, transformPipeline.GetModelViewMatrix(), 
+				transformPipeline.GetProjectionMatrix(), vLightEyePos, vMoonColor);
+			moonBatch.Draw();
+		modelViewMatrix.PopMatrix();
+
+	modelViewMatrix.PopMatrix();
+
+	modelViewMatrix.PopMatrix();
+	modelViewMatrix.PopMatrix();
+
+	glutSwapBuffers();
+	glutPostRedisplay();
 }
