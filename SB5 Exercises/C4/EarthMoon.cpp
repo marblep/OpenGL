@@ -51,13 +51,14 @@ void EarthMoonApp::OnRenderScene()
     m3dTransformVector4(vLightEyePos, vLightPos, mCamera);
 
 	modelViewMatrix.Translate(0.0f, 0.0f, -8.5f);
+	modelViewMatrix.Rotate(15.0f, 0.0f, 0.0f, 1.0f);
 
 	shaderManager.UseStockShader(GLT_SHADER_POINT_LIGHT_DIFF, transformPipeline.GetModelViewMatrix(), 
 		transformPipeline.GetProjectionMatrix(), vLightEyePos, vSunColor);
 	sunBatch.Draw();
 
 	modelViewMatrix.PushMatrix();
-		modelViewMatrix.Rotate(rot_earth, -0.12f,0.85f,0.0f);
+		modelViewMatrix.Rotate(rot_earth, 0.0f,0.1f,0.0f);
 		modelViewMatrix.Translate(2.3f,0.0f,0.0f);
 		shaderManager.UseStockShader(GLT_SHADER_POINT_LIGHT_DIFF, transformPipeline.GetModelViewMatrix(), 
 			transformPipeline.GetProjectionMatrix(), vLightEyePos, vEarthColor);
