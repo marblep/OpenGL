@@ -9,7 +9,17 @@ public:
 	void OnChangeSize(int w, int h);
 	void OnRenderScene();
 	void OnKeys(int key, int x, int y);
-
-	bool InitOpenGLState();
 	void SetupRC();
+
+private:
+	GLFrame viewFrame;
+	GLFrustum viewFrustum;
+	GLBatch cubeBatch;
+	GLMatrixStack modelViewMatrix;
+	GLMatrixStack projectionMatrix;
+	GLGeometryTransform transformPipeline;
+	GLint skyBoxShader;
+	GLint locMVPSkyBox;
+
+	void LoadCubeMap();
 };
