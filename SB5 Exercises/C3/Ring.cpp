@@ -11,6 +11,7 @@ void RingApp::SetupRC()
 	shaderManager.InitializeStockShaders();
 
 	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_CULL_FACE);
 
 	transformPipeline.SetMatrixStacks(modelViewMatrix, projectionMatrix);
 
@@ -77,8 +78,33 @@ void RingApp::OnRenderScene()
 
 void RingApp::DrawWireFrameBatch(GLBatch* pBatch)
 {
+	//Solid Green
+	
+	//glPolygonMode(GL_FRONT, GL_LINE);
 	shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(), vGreen);
 	pBatch->Draw();
+
+	//Black outline z-fighting
+	glPolygonOffset(-1.0f, -1.0f);
+	glEnable(GL_POLYGON_OFFSET_LINE);
+
+	//Lines antialiased
+	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC0_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	//Black wireframe 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glLineWidth(2.5f);
+	shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(), vBlack);
+	pBatch->Draw();
+
+	//Reset
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDisable(GL_POLYGON_OFFSET_LINE);
+	glLineWidth(1.0f);
+	glDisable(GL_BLEND);
+	glDisable(GL_LINE_SMOOTH);
 }
 
 void RingApp::OnKeys(int key, int x, int y)
